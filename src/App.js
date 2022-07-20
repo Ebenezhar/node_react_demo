@@ -5,12 +5,12 @@ import './App.css';
 
 function App() {
   const [Users, setUsers] = useState([])
-  let fetchData = async() => {
-    let res = await axios.get('http://localhost:3001/student');
-    console.log(res.data);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editUser, setEditUser] = useState({});
+  let fetchData = async () => {
+    let res = await axios.get('http://localhost:3001/students');
     setUsers(res.data);
   }
-
   useEffect(() => {
     fetchData();
   }, [])
@@ -22,12 +22,38 @@ function App() {
     },
     onSubmit: async (values) => {
       try {
-        await axios.post('http://localhost:3001/students', values);
+        if (!isEdit) {
+          await axios.post('http://localhost:3001/student', values);
+        } else {
+          await axios.put(`http://localhost:3001/student/${editUser.id}`, values);
+          setIsEdit(false);
+        }
       } catch (error) {
         console.log(error);
       }
     },
-  })
+  });
+
+  const handleEdit = async (id) => {
+    try {
+      let student = await axios.get(`http://localhost:3001/student/${id}`);
+      formik.setValues(student.data);
+      setEditUser(student.data);
+      setIsEdit(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleDelete = async(id) =>{
+    try {
+      await axios.delete(`http://localhost:3001/student/${id}`);
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+ 
   return (
     <div className='container'>
       <div className='row'>
@@ -65,6 +91,7 @@ function App() {
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Password</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -72,9 +99,15 @@ function App() {
                 Users.map((user, index) => {
                   return (
                     <tr>
-                      <th scope="row">{index + 1}</th>
+                      <th scope="row">{user.id}</th>
                       <td>{user.email}</td>
                       <td>{user.password}</td>
+                      <td>
+                        <button className='btn btn-primary' onClick={() => handleEdit(user.id)}>Edit</button>
+                      </td>
+                      <td>
+                        <button className='btn btn-danger' onClick={() => handleDelete(user.id)}>Delete</button>
+                      </td>
                     </tr>
                   )
                 })
