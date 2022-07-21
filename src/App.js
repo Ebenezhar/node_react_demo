@@ -15,7 +15,7 @@ function App() {
     fetchData();
   }, [])
 
-  const formik = useFormik({
+  let formik = useFormik({
     initialValues: {
       email: "",
       password: "",
@@ -25,7 +25,7 @@ function App() {
         if (!isEdit) {
           await axios.post('http://localhost:3001/student', values);
         } else {
-          await axios.put(`http://localhost:3001/student/${editUser.id}`, values);
+          await axios.put(`http://localhost:3001/student/${editUser._id}`, values);
           setIsEdit(false);
         }
       } catch (error) {
@@ -39,6 +39,8 @@ function App() {
       let student = await axios.get(`http://localhost:3001/student/${id}`);
       formik.setValues(student.data);
       setEditUser(student.data);
+      console.log("inp",student.data);
+      console.log("email",formik.values.email);
       setIsEdit(true);
     } catch (error) {
       console.log(error);
@@ -99,14 +101,14 @@ function App() {
                 Users.map((user, index) => {
                   return (
                     <tr>
-                      <th scope="row">{user.id}</th>
+                      <th scope="row">{user._id}</th>
                       <td>{user.email}</td>
                       <td>{user.password}</td>
                       <td>
-                        <button className='btn btn-primary' onClick={() => handleEdit(user.id)}>Edit</button>
+                        <button className='btn btn-primary' onClick={() => handleEdit(user._id)}>Edit</button>
                       </td>
                       <td>
-                        <button className='btn btn-danger' onClick={() => handleDelete(user.id)}>Delete</button>
+                        <button className='btn btn-danger' onClick={() => handleDelete(user._id)}>Delete</button>
                       </td>
                     </tr>
                   )
