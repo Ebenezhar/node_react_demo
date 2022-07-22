@@ -8,7 +8,7 @@ function App() {
   const [isEdit, setIsEdit] = useState(false);
   const [editUser, setEditUser] = useState({});
   let fetchData = async () => {
-    let res = await axios.get('http://localhost:3001/students');
+    let res = await axios.get('https://email-password-login.herokuapp.com/students');
     setUsers(res.data);
   }
   useEffect(() => {
@@ -23,9 +23,9 @@ function App() {
     onSubmit: async (values) => {
       try {
         if (!isEdit) {
-          await axios.post('http://localhost:3001/student', values);
+          await axios.post('https://email-password-login.herokuapp.com/student', values);
         } else {
-          await axios.put(`http://localhost:3001/student/${editUser._id}`, values);
+          await axios.put(`https://email-password-login.herokuapp.com/${editUser._id}`, values);
           setIsEdit(false);
         }
       } catch (error) {
@@ -36,7 +36,7 @@ function App() {
 
   const handleEdit = async (id) => {
     try {
-      let student = await axios.get(`http://localhost:3001/student/${id}`);
+      let student = await axios.get(`https://email-password-login.herokuapp.com/${id}`);
       formik.setValues(student.data);
       setEditUser(student.data);
       console.log("inp",student.data);
@@ -49,7 +49,7 @@ function App() {
 
   const handleDelete = async(id) =>{
     try {
-      await axios.delete(`http://localhost:3001/student/${id}`);
+      await axios.delete(`https://email-password-login.herokuapp.com/${id}`);
       fetchData();
     } catch (error) {
       console.log(error);
