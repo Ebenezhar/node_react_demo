@@ -25,7 +25,7 @@ function App() {
         if (!isEdit) {
           await axios.post('https://email-password-login.herokuapp.com/student', values);
         } else {
-          await axios.put(`https://email-password-login.herokuapp.com/${editUser._id}`, values);
+          await axios.put(`https://email-password-login.herokuapp.com/student/${editUser._id}`, values);
           setIsEdit(false);
         }
       } catch (error) {
@@ -36,7 +36,7 @@ function App() {
 
   const handleEdit = async (id) => {
     try {
-      let student = await axios.get(`https://email-password-login.herokuapp.com/${id}`);
+      let student = await axios.get(`https://email-password-login.herokuapp.com/student/${id}`);
       formik.setValues(student.data);
       setEditUser(student.data);
       console.log("inp",student.data);
@@ -49,7 +49,7 @@ function App() {
 
   const handleDelete = async(id) =>{
     try {
-      await axios.delete(`https://email-password-login.herokuapp.com/${id}`);
+      await axios.delete(`https://email-password-login.herokuapp.com/student/${id}`);
       fetchData();
     } catch (error) {
       console.log(error);
